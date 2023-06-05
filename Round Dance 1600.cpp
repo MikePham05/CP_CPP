@@ -37,57 +37,38 @@ int main() {
 	cin >> tt;
 
 	while (tt--) {
-		int i, j, m, n;
-		cin >> m >> n;
-		vector<vector<int>> a;
-		for (i = 0; i < m; i++) {
-			a.push_back({});
-			for (j = 0; j < n; j++)
-				a[i].push_back(0);
+		int n, first_node, i, j;
+		cin >> n;
+		vector<int> adj(n + 1), count(n + 1);
+		for (i = 0; i < n; i++) {
+			cin >> adj[i + 1];
+			count[adj[i + 1]]++;
 		}
 
-		if (m % 2 == 0) {
-			for (i = 0; i < n; i++)
-				for (j = 0; j < m; j++)
-					a[j][i] = i * m + j + 1;
-		}
-		else if (n % 2 == 0) {
-			for (i = 0; i < m; i++)
-				for (j = 0; j < n; j++)
-					a[i][j] = i * n + j + 1;
-		}
-		else {
-			vector<int> b(m);
-			int count = -1;
-			for (i = 0; i < m / 2; i++) {
-				count++;
-				b[i * 2 + 1] = count;
+
+		int hc = 0, fc = 0;
+		vector<int> passed(n + 1);
+		for (i = 1; i < n + 1; i++)
+			if (passed[i] == 0) {
+				int last;
+				first_node = i;
+				j = i;
+				hc++;
+				while (passed[j] == 0) {
+					passed[j]++;
+					last = j;
+					j = adj[j];
+				}
+				if (j == first_node) {// fc
+					if (adj[adj[j]] != j) {
+						hc--;
+						fc++;
+					}
+				}
+				else if (adj[j] != last) hc--;
 			}
 
-			for (i = 0; i < (m / 2) + 1; i++) {
-				count++;
-				b[i * 2] = count;
-			}
-
-			for (i = 0; i < m; i++)
-				for (j = 0; j < n; j++)
-					a[i][j] = b[i] * (n) + j + 1;
-		}
-
-		for (i = 0; i < m; i++) {
-			for (j = 0; j < n; j++)
-				cout << a[i][j] << " ";
-			cout << nl;
-		}
-		
+		cout << fc + min(hc, 1) << " " << fc + hc << "\n";
 	}
 }
 
-
-
-
-/*
-* 
-*/
-
-                                                    
